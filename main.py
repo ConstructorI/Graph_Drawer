@@ -35,36 +35,40 @@ class DrawScreen:
 
 
 def draw_scale(minutes):
-    screen.fill(pg.Color('black'))
+    try:
+        int(minutes)
+        screen.fill(pg.Color('black'))
 
-    # Graf's space
-    pg.draw.rect(screen, pg.Color("#0f0f0f"), [200, 50, 950, 620])
+        # Graf's space
+        pg.draw.rect(screen, pg.Color("#0f0f0f"), [200, 50, 950, 620])
 
-    # Lines
-    pg.draw.line(screen, pg.Color("white"), [200, 670], [1150, 670])
-    pg.draw.line(screen, pg.Color("white"), [200, 50], [200, 675])
+        # Lines
+        pg.draw.line(screen, pg.Color("white"), [200, 670], [1150, 670])
+        pg.draw.line(screen, pg.Color("white"), [200, 50], [200, 675])
 
-    # Last line
-    pg.draw.line(screen, pg.Color("white"), [1150, 680], [1150, 660])
-    pg.draw.line(screen, pg.Color("#2c2c2c"), [1150, 50], [1150, 660])
-    if ((int(minutes) % 10) > 5) or (int(minutes) < 100):
-        text = FONT.render(str(int(minutes)), False, pg.Color("white"), None)
-        screen.blit(text, [1145, 690])
+        # Last line
+        pg.draw.line(screen, pg.Color("white"), [1150, 680], [1150, 660])
+        pg.draw.line(screen, pg.Color("#2c2c2c"), [1150, 50], [1150, 660])
+        if ((int(minutes) % 10) > 5) or (int(minutes) < 100):
+            text = FONT.render(str(int(minutes)), False, pg.Color("white"), None)
+            screen.blit(text, [1145, 690])
 
-    # Scale
-    for i in range(1, int(minutes)):
-        cur = 200 + (950 / int(minutes)) * i
-        pg.draw.line(screen, pg.Color("white"), [cur, 675], [cur, 665])
-    for i in range(0, int((int(minutes) / 10)) + 1):
-        cur = 200 + (950 / (int(minutes) / 10)) * i
-        pg.draw.line(screen, pg.Color("white"), [cur, 680], [cur, 660])
-        pg.draw.line(screen, pg.Color("#2c2c2c"), [cur, 50], [cur, 660])
-        if i == 0:
-            text = FONT.render("0", False, pg.Color("white"), None)
-        else:
-            text = FONT.render(str(i) + "0", False, pg.Color("white"), None)
-        screen.blit(text, [cur - 5, 690])
-    print("done")
+        # Scale
+        for i in range(1, int(minutes)):
+            cur = 200 + (950 / int(minutes)) * i
+            pg.draw.line(screen, pg.Color("white"), [cur, 675], [cur, 665])
+        for i in range(0, int((int(minutes) / 10)) + 1):
+            cur = 200 + (950 / (int(minutes) / 10)) * i
+            pg.draw.line(screen, pg.Color("white"), [cur, 680], [cur, 660])
+            pg.draw.line(screen, pg.Color("#2c2c2c"), [cur, 50], [cur, 660])
+            if i == 0:
+                text = FONT.render("0", False, pg.Color("white"), None)
+            else:
+                text = FONT.render(str(i) + "0", False, pg.Color("white"), None)
+            screen.blit(text, [cur - 5, 690])
+        print("done")
+    except ValueError:
+        print("no")
 
 
 def main():
