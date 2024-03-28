@@ -7,6 +7,5 @@ class DrawInputboxes:
         self.rect = pg.Rect(x, y, w, h)
         self.color = pg.Color('lightskyblue3')
         self.text = text
-        self.txt_surface = pygame.font.SysFont("Arial", 14).render(text, True, self.color)
+        self.txt_surface = pygame.font.SysFont("Arial", 16).render(self.text, True, self.color)
         self.active = False
-
