@@ -19,18 +19,21 @@ class RunAction:
         self.average = []
 
         # Объекты
-        self.temperature_input = DrawInputboxes(55, 50, 50, 25, '250')
-        self.limit_input = DrawInputboxes(20, 125, 50, 25, '180')
+        self.temperature_input = DrawInputboxes(55, 50, 50, 25, '220')
+        self.limit_input = DrawInputboxes(20, 125, 50, 25, '160')
         self.limit_input_2 = DrawInputboxes(90, 125, 50, 25, '200')
-        self.time_input = DrawInputboxes(55, 200, 50, 25)
 
         self.clear_button = DrawInputboxes(32, 645, 95, 25)
+        self.run_button = DrawInputboxes(32, 250, 95, 25)
         self.add_line_button = DrawInputboxes(32, 300, 95, 25)
         self.add_avg_button = DrawInputboxes(32, 350, 95, 25)
 
         self.lines = DrawLines(0, [200])
 
     def run(self):
+
+        # Чтоб текст стереть после перезапуска цикла
+        self.time_input = DrawInputboxes(55, 200, 50, 25)
 
         # Бэкграунд
         self.ScreenMain.screen.fill(pg.Color('black'))
@@ -47,6 +50,8 @@ class RunAction:
         self.ScreenMain.screen.blit(text, [58, 175])
         text = self.ScreenMain.FONT2.render("Вылет 2", False, pg.Color("white"), None)
         self.ScreenMain.screen.blit(text, [89, 100])
+        text = self.ScreenMain.FONT2.render("Начать", False, pg.Color("white"), None)
+        self.ScreenMain.screen.blit(text, [55, 252])
         text = self.ScreenMain.FONT2.render("Добавить ТП", False, pg.Color("white"), None)
         self.ScreenMain.screen.blit(text, [36, 302])
         text = self.ScreenMain.FONT2.render("Средняя", False, pg.Color("white"), None)
@@ -61,6 +66,8 @@ class RunAction:
         lim_inp_check = False
         lim_2_inp_check = False
 
+        run_check = False
+
         # Основной цикл
         while not done:
 
@@ -71,6 +78,7 @@ class RunAction:
             self.draw_text(self.limit_input)
             self.draw_text(self.limit_input_2)
 
+            self.draw_text(self.run_button)
             self.draw_text(self.add_line_button)
             self.draw_text(self.add_avg_button)
             self.draw_text(self.clear_button)
@@ -120,6 +128,19 @@ class RunAction:
                         self.temperature_input.active = False
                         self.limit_input.active = False
 
+                    elif self.run_button.rect.collidepoint(event.pos) and not run_check:
+                        self.lines.temp = str(self.temperature_input.text)
+                        self.temperature = str(self.temperature_input.text)
+                        self.time = str(self.time_input.text)
+                        self.limit = str(self.limit_input.text)
+                        self.limit_2 = str(self.limit_input_2.text)
+                        self.time_input.active = False
+                        self.time_input.color = pg.Color('lightskyblue3')
+                        self.draw_scale_hor(self.time, self.temperature, self.limit, self.limit_2)
+                        self.draw_text(self.time_input)
+                        self.time_input.text = ''
+                        run_check = True
+
                     elif self.add_line_button.rect.collidepoint(event.pos):
                         self.lines.save()
                         self.load_lines_from_excel()
@@ -130,6 +151,7 @@ class RunAction:
 
                     elif self.clear_button.rect.collidepoint(event.pos):
                         self.lines_update()
+                        self.time_input.text = ''
                         done = True
                         self.lines.lines_coord_2 = []
                         self.lines.count = 1
@@ -171,6 +193,8 @@ class RunAction:
                             self.ScreenMain.screen.blit(text, [58, 175])
                             text = self.ScreenMain.FONT2.render("Вылет 2", False, pg.Color("white"), None)
                             self.ScreenMain.screen.blit(text, [89, 100])
+                            text = self.ScreenMain.FONT2.render("Начать", False, pg.Color("white"), None)
+                            self.ScreenMain.screen.blit(text, [55, 252])
                             text = self.ScreenMain.FONT2.render("Добавить ТП", False, pg.Color("white"), None)
                             self.ScreenMain.screen.blit(text, [36, 302])
                             text = self.ScreenMain.FONT2.render("Средняя", False, pg.Color("white"), None)
@@ -187,6 +211,7 @@ class RunAction:
                             self.draw_scale_hor(self.time, self.temperature, self.limit, self.limit_2)
                             self.draw_text(self.time_input)
                             self.time_input.text = ''
+                            run_check = True
 
                         elif event.key == pg.K_BACKSPACE:
                             pg.draw.rect(self.ScreenMain.screen, pg.Color('black'), self.time_input.rect)
@@ -274,11 +299,14 @@ class RunAction:
             if lim_2_inp_check:
                 pg.draw.rect(self.ScreenMain.screen, pg.Color('black'), [92, 127, 46, 22])
 
+            if run_check:
+                pg.draw.rect(self.ScreenMain.screen, pg.Color('black'), [30, 248, 99, 29])
+
             # Снова выход
             [exit() for i in pg.event.get() if i.type == pg.QUIT]
 
             # FPS вверху окошка по приколу))
-            pg.display.set_caption(str(self.ScreenMain.clock.get_fps()))
+            pg.display.set_caption("FPS: " + str(self.ScreenMain.clock.get_fps()))
 
             # флип
             pg.display.flip()
